@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Replace with actual repo URLs
-        GITHUB_REPO = 'https://github.com/bhaskars2025/Automation-devops.git'
+        GITHUB_REPO = 'github.com/bhaskars2025/Automation-devops.git'
         BITBUCKET_REPO = 'git@bitbucket.org:your-org/your-repo.git'
     }
 
