@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Replace with actual repo URLs
         GITHUB_REPO = 'github.com/bhaskars2025/Automation-devops.git'
-        BITBUCKET_REPO = 'git@bitbucket.org:your-org/your-repo.git'
+        BITBUCKET_REPO = 'bhaskar-bitbucket-admin@bitbucket.org/bhaskar-bitbucket/fivetran-iac.git'
     }
 
  
