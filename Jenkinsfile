@@ -7,9 +7,7 @@ pipeline {
         BITBUCKET_REPO = 'git@bitbucket.org:your-org/your-repo.git'
     }
 
-    triggers {
-        // Multibranch Pipeline doesn't use this, relies on SCM webhooks or polling
-    }
+ 
 
     options {
         skipDefaultCheckout()
