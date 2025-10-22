@@ -36,7 +36,7 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-read-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
+                withCredentials([usernamePassword(credentialsId: 'bhaskar2025', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
                     sh '''
                         git config --global user.name "$bhaskar"
                         git config --global user.email "bhaskar@ci.local"
