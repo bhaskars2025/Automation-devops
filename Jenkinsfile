@@ -2,78 +2,26 @@ pipeline {
     agent any
 
     environment {
-        // Replace with actual repo URLs
-        GITHUB_REPO = 'github.com/bhaskars2025/Automation-devops.git'
-        BITBUCKET_REPO = 'bhaskar-bitbucket-admin@bitbucket.org/bhaskar-bitbucket/fivetran-iac.git'
-    }
-
- 
-
-    options {
-        skipDefaultCheckout()
+        GITHUB_CREDS = credentials('bhaskar2025')
+        BITBUCKET_CREDS = credentials('bhaskar-bitbucket-admin')
+        GITHUB_REPO = 'https://github.com/bhaskars2025/Automation-devops.git'
+        BITBUCKET_REPO = 'https://bhaskar-bitbucket-admin@bitbucket.org/bhaskar-bitbucket/automation-devops.git'
     }
 
     stages {
-        stage('Validate Branch') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'Develop'
-                    
-                }
-            }
+        stage('Clone from GitHub') {
             steps {
-                echo "Triggered by valid branch: ${env.BRANCH_NAME}"
+                git url: "${GITHUB_REPO}", credentialsId: "${GITHUB_CREDS}"
             }
         }
 
-        stage('Checkout from GitHub') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'Develop'
-                    
-                }
-            }
+        stage('Push to Bitbucket') {
             steps {
-                withCredentials([usernamePassword(credentialsId: '4b6852d5-4c89-4b82-913a-ae29ba63d266', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
-                    sh '''
-                        git config --global user.name "$bhaskar"
-                        git config --global user.email "bhaskar@ci.local"
-
-                        git clone --branch ${BRANCH_NAME} https://${GIT_USER}:${GIT_PAT}@${GITHUB_REPO} repo
-                    '''
-                }
+                sh """
+                    git remote add bitbucket ${BITBUCKET_REPO}
+                    git push bitbucket HEAD:main
+                """
             }
-        }
-
-        stage('Force Push to Bitbucket') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'Develop'
-                    
-                }
-            }
-            steps {
-                sshagent(['bitbucket-ssh-key']) {
-                    dir('repo') {
-                        sh '''
-                            git remote add bitbucket ${BITBUCKET_REPO}
-                            git push bitbucket ${BRANCH_NAME}:${BRANCH_NAME} --force
-                        '''
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        failure {
-            echo "Pipeline failed for branch ${env.BRANCH_NAME}"
-        }
-        success {
-            echo "Successfully synced ${env.BRANCH_NAME} to Bitbucket"
         }
     }
 }
